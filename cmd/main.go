@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func main() {
 	ctx := context.Background()
 
@@ -42,22 +41,20 @@ func main() {
 	r := gin.Default()
 	r.Use(app.DatabaseMiddleware(mongoStore.Client))
 
-    r.POST("/register", app.Register)
-    r.POST("/login", app.Login)
+	r.POST("/register", app.Register)
+	r.POST("/login", app.Login)
 
-    // Защищенные маршруты
-    authGroup := r.Group("/api")
-    authGroup.Use(app.AuthMiddleware())
-    {
-        authGroup.POST("/habits", app.AddHabit)
-        authGroup.GET("/habits", app.GetHabits)
-        authGroup.GET("/users", app.GetUsers)
-    }
-	
-	go logic.DelHabit(context.WithValue(context.Background(), "mongoClient", mongoStore.Client), 24 * time.Hour)
-    r.Run(":8080")
-	
+	// Защищенные маршруты
+	authGroup := r.Group("/api")
+	authGroup.Use(app.AuthMiddleware())
+	{
+		authGroup.POST("/habits", app.AddHabit)
+		authGroup.GET("/habits", app.GetHabits)
+		authGroup.GET("/users", app.GetUsers)
+		authGroup.PATCH("/habits", app.PATCHHabit)
+	}
+
+	go logic.DelHabit(context.WithValue(context.Background(), "mongoClient", mongoStore.Client), 24*time.Hour)
+	r.Run(":8080")
+
 }
-
-
-

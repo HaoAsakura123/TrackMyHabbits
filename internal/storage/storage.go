@@ -10,7 +10,7 @@ import (
 )
 
 const (
-    TokenExpiration = 24 * time.Hour
+	TokenExpiration = 24 * time.Hour
 )
 
 type Storage interface {
@@ -28,7 +28,7 @@ type MongoStore struct {
 
 // NewMongoStore создает новое подключение к MongoDB
 func NewMongoStore(ctx context.Context, uri, dbName, collectionName string) (*MongoStore, error) {
-	ctx, cancel := context.WithTimeout(ctx, 10 * time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
@@ -61,4 +61,3 @@ func (s *MongoStore) Close(ctx context.Context) error {
 func (s *MongoStore) GetCollection() *mongo.Collection {
 	return s.Client.Database(s.Database).Collection(s.collection)
 }
-
